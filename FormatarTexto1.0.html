@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORMATADOR DE TEXTO</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            background-color: #F0F8FF;
+            color: #696969;
+            height: 100vh;
+            margin: 0px;
+        }
+
+        section {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flex {
+            display: flex;
+            justify-content: center;
+        }
+
+        .inputRadio {
+            margin-bottom: 20px;
+        }
+
+        .inputRadio label {
+            font-size: 18px;
+            padding-right: 20px;
+        }
+
+        .texto {
+            width: 70vw;
+            height: 20px;
+            font-size: 18px;
+        }
+
+        .textoFormatado {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .contadorDeCaracteres {
+            margin-top: 80px;
+        }
+
+        .copiar {
+            margin-top: 30px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #429745;
+        }
+
+        .button:active {
+            background-color: #38803b;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 0px;
+            margin: 0px;
+            font-size: 15px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header class="flex">
+        <h1>Formatador de Texto!</h1>
+    </header>
+
+    <section class="flex">
+        <div class="inputRadio">
+            <input type="radio" name="opcaoFormatar" id="opcaoFormatarTexto" checked>
+            <label for="opcaoFormatarTexto">Formatar texto</label>
+            <input type="radio" name="opcaoFormatar" id="opcaoNaoFormatarTexto">
+            <label for="opcaoNaoFormatarTexto">Não formatar</label>
+        </div>
+
+        <div class="inputText">
+            <label for="texto" class="label">Texto: </label>
+            <input type="text" name="texto" id="texto" class="texto" placeholder="Informe o texto a ser formatado...">
+        </div>
+
+    </section>
+    <div>
+        <div id="textoFormatado" class="textoFormatado flex"></div>
+
+        <div class="copiar flex">
+            <button id="copiar" class="button">Copiar</button>
+        </div>
+
+        <div id="contadorDeCaracteres" class="contadorDeCaracteres flex"></div>
+    </div>
+
+    <footer>Feito por <strong>Fupu</strong> &#128540</footer>
+
+
+    <script>
+        let texto = document.querySelector('#texto')
+        let textoFormatado = document.querySelector('#textoFormatado')
+        let copiar = document.getElementById('copiar')
+        let contadorDeCaracteres = document.querySelector('#contadorDeCaracteres')
+        let opcaoFormatarTexto = document.getElementsByName('opcaoFormatar')
+
+        document.querySelector('.copiar').style.display = "none"
+
+        const copiarTexto = () => {
+            navigator.clipboard.writeText(textoFormatado.innerText);
+        }
+        const formatarTexto = () => {
+            if (opcaoFormatarTexto[0].checked) {
+
+                textoFormatado.innerHTML = texto.value
+                    .replace(/\	/gi, '') // Caractere especial invisivel (nao sei o que é kkkkk)
+                    .replace(/ |\(|\)/gi, '')
+                    .replace(/\\|\/|-|\+|\*|:|<|>|\.|,|;|#|&|!|\?|@|%|\$|=|NFe|CTe/gi, '')
+
+            } else {
+                textoFormatado.innerHTML = texto.value
+            }
+
+            contadorDeCaracteres.innerHTML = "Quantidade de caracteres: " + textoFormatado.innerHTML.length
+            if (textoFormatado.innerText.length == 0) {
+                contadorDeCaracteres.style.display = "none"
+                document.querySelector('.copiar').style.display = "none"
+            } else {
+                contadorDeCaracteres.style.display = "flex"
+                document.querySelector('.copiar').style.display = "flex"
+            }
+        }
+
+        let esperar = false
+        texto.onclick = e => {
+            if(esperar) {
+                // esperar = false
+            } else {
+                texto.select()
+                esperar = true
+                setTimeout(() => {
+                    esperar = false
+                }, 3000)
+            }
+        }
+
+        opcaoFormatarTexto.forEach(opcao => {
+            opcao.onchange = formatarTexto
+        })
+
+        texto.oninput = formatarTexto
+
+        copiar.onclick = copiarTexto
+
+    </script>
+
+</body>
+
+</html>
